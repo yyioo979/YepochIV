@@ -4,12 +4,14 @@
 num = length(data);
 rankNum = 10;
 mated = cell(1, num);
+% segLevel = 16;
 for nc = 1:1:num
     nc
     iStone = data{nc};
     skPts = getPoints(iStone.sketch);
-%     seg = segmentation(iStone.sketch);
-    [~, seg] = intercept(3, 3, iStone.sketch);
+    seg = iStone.skSeg;
+%     seg = segmentation(iStone.sketch, segLevel);
+%     [~, seg] = intercept(3, 3, iStone.sketch);
 %     seg = allotRatio(seg, mould);
     skFeature = getFeature(iStone.skMblbp, skPts);
     sk.pts = skPts;
@@ -18,10 +20,10 @@ for nc = 1:1:num
     matched = cell(1, num);
     for ic = 1:1:num
         iCursor = data{ic};
-        ph.fea = getFeature(iCursor.phMblbp, skPts);
+        ph.fea = getFeature(iCursor.phMblbp, ph.pts);
         matched{1, ic} = getMatch(sk, ph);
         matched{1, ic}.mark = data{ic}.mark;
-        party = group(seg.part, matched{1, ic}.matchedPts);
+        party = group(seg.parts, matched{1, ic}.matchedPts);
         matched{1, ic}.ratio = getRatio(party);
 %         matched{1, ic}.ratio = matched{1, ic}.matchedNum;
     end
